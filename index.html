@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>دفترچه عاشقانه</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div id="loading-screen">
+    <div class="loading-cat">🐱</div>
+    <p>در حال باز کردن دفترچه...</p>
+  </div>
+
+  <div id="app" class="hidden">
+
+    <!-- ===== DIARY TAB ===== -->
+    <section id="tab-diary" class="tab active">
+      <div class="diary-page">
+        <div class="diary-header">
+          <p id="daily-poem" class="daily-poem"></p>
+          <p id="jalali-date" class="jalali-date"></p>
+        </div>
+        <textarea id="diary-textarea" class="diary-textarea" placeholder="امروز چی توی دلت بود؟..."></textarea>
+        <div id="save-indicator" class="save-indicator"></div>
+        <div class="cat-walk-wrap">
+          <div id="walking-cat" class="walking-cat">🐈</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DATE SUGGESTION TAB ===== -->
+    <section id="tab-date" class="tab">
+      <h2 class="tab-title">دیت کجا بریم؟</h2>
+      <form id="date-form" class="glass-form">
+        <label>فاز امروزتون چیه؟
+          <select name="mood" required>
+            <option value="آروم و رمانتیک">آروم و رمانتیک</option>
+            <option value="پرانرژی و شلوغ">پرانرژی و شلوغ</option>
+            <option value="نوستالژیک">نوستالژیک</option>
+            <option value="ماجراجویانه">ماجراجویانه</option>
+          </select>
+        </label>
+        <label>بودجه تقریبی
+          <select name="budget" required>
+            <option value="کم">کم (زیر ۵۰۰ تومن)</option>
+            <option value="متوسط">متوسط</option>
+            <option value="بدون محدودیت">بدون محدودیت</option>
+          </select>
+        </label>
+        <label>ترجیح
+          <select name="location_pref" required>
+            <option value="بیرون">بیرون از خونه</option>
+            <option value="خونه">تو خونه</option>
+          </select>
+        </label>
+        <label>شهر
+          <input type="text" name="city" placeholder="مثلاً تهران" required />
+        </label>
+        <button type="submit">پیشنهاد بده ✨</button>
+      </form>
+      <div id="date-result" class="result-box hidden"></div>
+    </section>
+
+    <!-- ===== ALBUM TAB ===== -->
+    <section id="tab-album" class="tab">
+      <h2 class="tab-title">آلبوم عکس‌هامون</h2>
+      <label class="upload-btn">
+        📷 افزودن عکس
+        <input type="file" id="photo-input" accept="image/*" hidden />
+      </label>
+      <div id="album-grid" class="album-grid"></div>
+    </section>
+
+    <!-- ===== GIFT TAB ===== -->
+    <section id="tab-gift" class="tab">
+      <h2 class="tab-title">کادو می‌خوام</h2>
+      <form id="gift-form" class="glass-form">
+        <label>مناسبت چیه؟
+          <input type="text" name="occasion" placeholder="مثلاً سالگرد، تولد..." required />
+        </label>
+        <label>بودجه تقریبی
+          <input type="text" name="budget" placeholder="مثلاً تا ۲ میلیون تومن" required />
+        </label>
+        <label>سلیقه/علایقش چیه؟
+          <textarea name="interests" placeholder="مثلاً عاشق کتابه، به عطر علاقه داره..." required></textarea>
+        </label>
+        <button type="submit">پیشنهاد بده 🎁</button>
+      </form>
+      <div id="gift-result" class="result-box hidden"></div>
+    </section>
+
+    <!-- ===== BOTTOM NAV ===== -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-tab="tab-diary">📖<span>دفترچه</span></button>
+      <button class="nav-btn" data-tab="tab-date">💑<span>دیت</span></button>
+      <button class="nav-btn" data-tab="tab-album">📸<span>آلبوم</span></button>
+      <button class="nav-btn" data-tab="tab-gift">🎁<span>کادو</span></button>
+    </nav>
+
+  </div>
+
+  <div id="error-screen" class="hidden">
+    <p>😿 مشکلی پیش اومد. لطفاً دوباره از تلگرام بازش کن.</p>
+    <p id="error-detail" class="error-detail"></p>
+  </div>
+
+  <script src="js/poems.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/diary.js"></script>
+  <script src="js/album.js"></script>
+  <script src="js/dateSuggest.js"></script>
+  <script src="js/gift.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
