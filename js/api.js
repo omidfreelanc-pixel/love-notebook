@@ -36,7 +36,9 @@ window.API = (() => {
     const res = await fetch(`${base()}${path}`, { ...options, headers });
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      throw new Error(body.error || `REQUEST_FAILED_${res.status}`);
+      const err = new Error(body.error || `REQUEST_FAILED_${res.status}`);
+      err.userMessage = body.message || null;
+      throw err;
     }
     return res.json();
   }
@@ -47,6 +49,7 @@ window.API = (() => {
 
     getDiary: (date) =>
       authedFetch(`/diary${date ? `?date=${date}` : ""}`),
+    listDiaryDates: () => authedFetch(`/diary?list=1`),
     saveDiary: (date, content) =>
       authedFetch(`/diary`, {
         method: "POST",

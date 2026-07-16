@@ -34,7 +34,7 @@ window.Gift = (() => {
         resultBox.classList.remove("hidden");
       } catch (err) {
         console.error("suggest-gift failed:", err);
-        resultBox.textContent = "متأسفانه نشد پیشنهاد بدم، دوباره امتحان کن.";
+        resultBox.textContent = err.userMessage || "متأسفانه نشد پیشنهاد بدم، دوباره امتحان کن.";
         resultBox.classList.remove("hidden");
       } finally {
         submitBtn.disabled = false;

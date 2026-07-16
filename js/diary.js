@@ -23,20 +23,32 @@ const JALALI_MONTHS = [
   "مهر","آبان","آذر","دی","بهمن","اسفند",
 ];
 
-function formatJalaliToday() {
-  const now = new Date();
-  const [jy, jm, jd] = toJalali(now.getFullYear(), now.getMonth() + 1, now.getDate());
+function formatJalali(iso) {
+  const [y, m, d] = iso.split("-").map(Number);
+  const [jy, jm, jd] = toJalali(y, m, d);
   return `${jd} ${JALALI_MONTHS[jm - 1]} ${jy}`;
+}
+
+function formatJalaliToday() {
+  return formatJalali(todayISODate());
 }
 
 function todayISODate() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function addDaysISO(iso, delta) {
+  const dt = new Date(iso + "T00:00:00");
+  dt.setDate(dt.getDate() + delta);
+  return dt.toISOString().slice(0, 10);
+}
+
 window.Diary = (() => {
   let saveTimer = null;
+  let currentDate = todayISODate();
   const textarea = () => document.getElementById("diary-textarea");
   const indicator = () => document.getElementById("save-indicator");
+  const flip = () => document.getElementById("diary-flip");
 
   function flashSaved() {
     const el = indicator();
@@ -47,7 +59,7 @@ window.Diary = (() => {
 
   async function save() {
     try {
-      await window.API.saveDiary(todayISODate(), textarea().value);
+      await window.API.saveDiary(currentDate, textarea().value);
       flashSaved();
     } catch (err) {
       console.error("diary save failed:", err);
@@ -59,28 +71,79 @@ window.Diary = (() => {
     saveTimer = setTimeout(save, 3000); // 3s after typing stops
   }
 
-  async function init() {
-    document.getElementById("daily-poem").textContent = getDailyPoem();
-    document.getElementById("jalali-date").textContent = formatJalaliToday();
+  function updateDateUI() {
+    document.getElementById("jalali-date").textContent = formatJalali(currentDate);
+    document.getElementById("diary-date-input").value = currentDate;
+    // Disable "next" once we're on today (no future entries).
+    document.getElementById("diary-next").disabled = currentDate >= todayISODate();
+  }
+
+  async function loadDate(dir) {
+    // Flush any pending edits on the outgoing page first.
+    clearTimeout(saveTimer);
+    await save();
+
+    updateDateUI();
+
+    // Page-flip animation (RTL-aware): next -> flip from right, prev -> from left.
+    const el = flip();
+    el.classList.remove("flip-next", "flip-prev");
+    void el.offsetWidth; // restart animation
+    if (dir === "next") el.classList.add("flip-next");
+    else if (dir === "prev") el.classList.add("flip-prev");
 
     try {
-      const data = await window.API.getDiary(todayISODate());
+      const data = await window.API.getDiary(currentDate);
+      textarea().value = data.content || "";
+    } catch (err) {
+      console.error("diary load failed:", err);
+      textarea().value = "";
+    }
+  }
+
+  function goPrev() {
+    currentDate = addDaysISO(currentDate, -1);
+    loadDate("prev");
+  }
+
+  function goNext() {
+    if (currentDate >= todayISODate()) return;
+    currentDate = addDaysISO(currentDate, 1);
+    loadDate("next");
+  }
+
+  async function init() {
+    document.getElementById("daily-poem").textContent = getDailyPoem();
+    updateDateUI();
+
+    try {
+      const data = await window.API.getDiary(currentDate);
       textarea().value = data.content || "";
     } catch (err) {
       console.error("diary load failed:", err);
     }
 
     textarea().addEventListener("input", scheduleSave);
+    document.getElementById("diary-prev").addEventListener("click", goPrev);
+    document.getElementById("diary-next").addEventListener("click", goNext);
+
+    const dateInput = document.getElementById("diary-date-input");
+    document.getElementById("diary-cal-btn").addEventListener("click", () => {
+      if (typeof dateInput.showPicker === "function") dateInput.showPicker();
+      else dateInput.click();
+    });
+    dateInput.max = todayISODate();
+    dateInput.addEventListener("change", () => {
+      if (!dateInput.value) return;
+      const dir = dateInput.value > currentDate ? "next" : "prev";
+      currentDate = dateInput.value;
+      loadDate(dir);
+    });
 
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") save();
     });
     window.addEventListener("beforeunload", () => {
-      // Best-effort synchronous-ish save on exit.
-      navigator.sendBeacon &&
-        navigator.sendBeacon; // sendBeacon can't set Authorization header,
-      // so we just fire the normal save; most exits go through
-      // visibilitychange first anyway inside Telegram's WebView.
       save();
     });
   }

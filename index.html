@@ -18,15 +18,25 @@
 
     <!-- ===== DIARY TAB ===== -->
     <section id="tab-diary" class="tab active">
-      <div class="diary-page">
-        <div class="diary-header">
-          <p id="daily-poem" class="daily-poem"></p>
-          <p id="jalali-date" class="jalali-date"></p>
-        </div>
-        <textarea id="diary-textarea" class="diary-textarea" placeholder="امروز چی توی دلت بود؟..."></textarea>
-        <div id="save-indicator" class="save-indicator"></div>
-        <div class="cat-walk-wrap">
-          <div id="walking-cat" class="walking-cat">🐈</div>
+      <div class="book">
+        <div class="book-spine"></div>
+        <div id="diary-flip" class="diary-page">
+          <div class="diary-header">
+            <p id="daily-poem" class="daily-poem"></p>
+            <div class="date-nav">
+              <button id="diary-prev" class="date-arrow" aria-label="روز قبل">‹</button>
+              <button id="diary-cal-btn" class="jalali-date" type="button">
+                <span id="jalali-date"></span> 📅
+              </button>
+              <button id="diary-next" class="date-arrow" aria-label="روز بعد">›</button>
+              <input type="date" id="diary-date-input" class="date-hidden-input" />
+            </div>
+          </div>
+          <textarea id="diary-textarea" class="diary-textarea" placeholder="امروز چی توی دلت بود؟..."></textarea>
+          <div id="save-indicator" class="save-indicator"></div>
+          <div class="cat-walk-wrap">
+            <div id="walking-cat" class="walking-cat">🐈</div>
+          </div>
         </div>
       </div>
     </section>
@@ -71,7 +81,15 @@
         📷 افزودن عکس
         <input type="file" id="photo-input" accept="image/*" hidden />
       </label>
-      <div id="album-grid" class="album-grid"></div>
+
+      <div class="album-book">
+        <div id="album-spread" class="album-spread"></div>
+        <div class="album-nav">
+          <button id="album-prev" class="date-arrow" aria-label="صفحه قبل">‹</button>
+          <span id="album-pageinfo" class="album-pageinfo"></span>
+          <button id="album-next" class="date-arrow" aria-label="صفحه بعد">›</button>
+        </div>
+      </div>
     </section>
 
     <!-- ===== GIFT TAB ===== -->
