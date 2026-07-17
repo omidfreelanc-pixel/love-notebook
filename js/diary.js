@@ -28,6 +28,8 @@ function formatJalali(iso) {
   const [jy, jm, jd] = toJalali(y, m, d);
   return `${jd} ${JALALI_MONTHS[jm - 1]} ${jy}`;
 }
+// Shared with reminders/promises modules.
+window.formatJalali = formatJalali;
 
 function formatJalaliToday() {
   return formatJalali(todayISODate());
@@ -46,6 +48,10 @@ function addDaysISO(iso, delta) {
 window.Diary = (() => {
   let saveTimer = null;
   let currentDate = todayISODate();
+  // The date the textarea's current text actually belongs to. Kept
+  // separate from currentDate so that when we switch days we save the
+  // OUTGOING day's text to the OUTGOING date, never the new one.
+  let loadedDate = todayISODate();
   const textarea = () => document.getElementById("diary-textarea");
   const indicator = () => document.getElementById("save-indicator");
   const flip = () => document.getElementById("diary-flip");
@@ -57,9 +63,11 @@ window.Diary = (() => {
     setTimeout(() => el.classList.remove("show"), 1500);
   }
 
+  // Saves the text currently in the textarea to the date it belongs to.
   async function save() {
+    const dateForThisText = loadedDate;
     try {
-      await window.API.saveDiary(currentDate, textarea().value);
+      await window.API.saveDiary(dateForThisText, textarea().value);
       flashSaved();
     } catch (err) {
       console.error("diary save failed:", err);
@@ -79,7 +87,8 @@ window.Diary = (() => {
   }
 
   async function loadDate(dir) {
-    // Flush any pending edits on the outgoing page first.
+    // Flush any pending edits on the OUTGOING page first (save() reads
+    // loadedDate, which still points at the old day here).
     clearTimeout(saveTimer);
     await save();
 
@@ -99,6 +108,8 @@ window.Diary = (() => {
       console.error("diary load failed:", err);
       textarea().value = "";
     }
+    // Only now does the text on screen belong to the new date.
+    loadedDate = currentDate;
   }
 
   function goPrev() {

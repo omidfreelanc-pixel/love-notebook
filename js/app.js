@@ -16,8 +16,12 @@
         btn.classList.add("active");
         document.getElementById(btn.dataset.tab).classList.add("active");
 
-        // Lazy-load album on first visit to that tab
+        // Lazy-load data-driven tabs on visit.
         if (btn.dataset.tab === "tab-album") window.Album.load();
+        else if (btn.dataset.tab === "tab-reminders") window.Reminders.load();
+        else if (btn.dataset.tab === "tab-promises") window.Promises.load();
+        else if (btn.dataset.tab === "tab-playlist") window.Playlist.load();
+        else if (window.Playlist) window.Playlist.stopCurrent();
       });
     });
   }
@@ -44,6 +48,9 @@
       window.DateSuggest.init();
       window.Gift.init();
       window.Album.init(); // pre-warm album for first tab switch
+      window.Reminders.init();
+      window.Promises.init();
+      window.Playlist.init();
 
       document.getElementById("loading-screen").classList.add("hidden");
       document.getElementById("app").classList.remove("hidden");

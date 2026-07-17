@@ -110,12 +110,65 @@
       <div id="gift-result" class="result-box hidden"></div>
     </section>
 
+    <!-- ===== REMINDERS TAB ===== -->
+    <section id="tab-reminders" class="tab">
+      <h2 class="tab-title">یادآوری‌ها</h2>
+      <form id="reminder-form" class="glass-form">
+        <label>یادداشت یادآوری
+          <textarea name="note" placeholder="مثلاً: سالگرد آشناییمونه، یادت نره ❤️" required></textarea>
+        </label>
+        <label>تاریخ یادآوری
+          <input type="date" name="remind_date" required />
+        </label>
+        <label>برای کی؟
+          <select name="target" required>
+            <option value="me">خودم</option>
+            <option value="partner">عشقم</option>
+          </select>
+        </label>
+        <button type="submit" class="btn-square">ثبت یادآوری ⏰</button>
+      </form>
+      <p class="hint">در تاریخ انتخاب‌شده، ربات این یادداشت رو برای شخص مشخص‌شده می‌فرسته.</p>
+      <div id="reminders-list" class="card-list"></div>
+    </section>
+
+    <!-- ===== PROMISES TAB ===== -->
+    <section id="tab-promises" class="tab">
+      <h2 class="tab-title">قول‌هامون</h2>
+      <form id="promise-form" class="glass-form">
+        <label>قول چیه؟
+          <textarea name="note" placeholder="مثلاً: قول می‌دم هر جمعه برات گل بخرم 🌹" required></textarea>
+        </label>
+        <label>تاریخ قول
+          <input type="date" name="promise_date" required />
+        </label>
+        <label>کی به کی قول می‌ده؟
+          <select name="direction" required>
+            <option value="i_promise">من به عشقم قول می‌دم</option>
+            <option value="partner_promises">عشقم به من قول می‌ده</option>
+          </select>
+        </label>
+        <button type="submit" class="btn-square">ثبت قول 🤝</button>
+      </form>
+      <div id="promises-list" class="card-list"></div>
+    </section>
+
+    <!-- ===== PLAYLIST TAB ===== -->
+    <section id="tab-playlist" class="tab">
+      <h2 class="tab-title">آهنگ‌هامون 🎵</h2>
+      <p class="hint">هر آهنگ یا ویس که برای ربات بفرستید، خودکار همینجا ثبت می‌شه.</p>
+      <div id="playlist-list" class="card-list"></div>
+    </section>
+
     <!-- ===== BOTTOM NAV ===== -->
     <nav class="bottom-nav">
       <button class="nav-btn active" data-tab="tab-diary">📖<span>دفترچه</span></button>
       <button class="nav-btn" data-tab="tab-date">💑<span>دیت</span></button>
       <button class="nav-btn" data-tab="tab-album">📸<span>آلبوم</span></button>
       <button class="nav-btn" data-tab="tab-gift">🎁<span>کادو</span></button>
+      <button class="nav-btn" data-tab="tab-reminders">⏰<span>یادآوری</span></button>
+      <button class="nav-btn" data-tab="tab-promises">🤝<span>قول‌ها</span></button>
+      <button class="nav-btn" data-tab="tab-playlist">🎵<span>آهنگ‌ها</span></button>
     </nav>
 
   </div>
@@ -132,6 +185,9 @@
   <script src="js/album.js"></script>
   <script src="js/dateSuggest.js"></script>
   <script src="js/gift.js"></script>
+  <script src="js/reminders.js"></script>
+  <script src="js/promises.js"></script>
+  <script src="js/playlist.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

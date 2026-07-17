@@ -393,15 +393,170 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  font-size: 20px;
+  font-size: 18px;
   color: #c98;
   padding: 6px 0;
   cursor: pointer;
+  min-width: 0;
 }
-.nav-btn span { font-size: 10.5px; }
+.nav-btn span {
+  font-size: 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
 .nav-btn.active { color: var(--pink-dark); font-weight: 700; }
+.nav-btn.active::after {
+  content: "";
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--pink-dark);
+  margin-top: 1px;
+}
 
 @media (min-width: 480px) {
   #app { max-width: 480px; margin: 0 auto; }
   .bottom-nav { max-width: 480px; margin: 0 auto; }
 }
+
+/* ---------- new features: hint + lists + cards ---------- */
+.hint {
+  font-size: 12px;
+  color: var(--pink-dark);
+  opacity: .8;
+  text-align: center;
+  margin: 12px 4px 16px;
+  line-height: 1.8;
+}
+
+/* Square, high-quality primary action button */
+.btn-square {
+  border-radius: 14px !important;
+  letter-spacing: .3px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .12s ease, box-shadow .2s ease;
+}
+.btn-square::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.28), transparent 60%);
+  pointer-events: none;
+}
+.btn-square:active { transform: translateY(1px) scale(0.99); }
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.entry-card {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+  animation: fadeIn .25s ease;
+}
+.entry-card.is-done { opacity: .7; }
+.entry-card-body { flex: 1; min-width: 0; }
+.entry-note {
+  margin: 0 0 8px;
+  font-size: 14.5px;
+  line-height: 1.85;
+  color: var(--ink);
+  word-break: break-word;
+}
+.entry-card.is-done .entry-note { text-decoration: line-through; text-decoration-color: rgba(217,79,125,0.4); }
+.entry-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  font-size: 11.5px;
+  color: var(--pink-dark);
+}
+.promise-dir { font-weight: 700; }
+.badge-sent {
+  background: #e7f6d8;
+  color: #5a8a35;
+  border-radius: 8px;
+  padding: 1px 8px;
+  font-weight: 700;
+}
+.entry-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: center;
+}
+.entry-del, .entry-check {
+  background: rgba(255,255,255,0.7);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  width: 36px; height: 36px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.entry-del:active, .entry-check:active { transform: scale(0.92); }
+
+.empty-state {
+  text-align: center;
+  color: var(--pink-dark);
+  opacity: .7;
+  font-size: 14px;
+  padding: 36px 12px;
+  line-height: 2;
+}
+
+/* ---------- playlist / tracks ---------- */
+.track-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+  animation: fadeIn .25s ease;
+}
+.track-play {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(217,79,125,0.35);
+}
+.track-play:active { transform: scale(0.94); }
+.track-info { flex: 1; min-width: 0; }
+.track-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.track-performer { color: var(--pink-dark); font-weight: 400; }
+.track-dur { font-size: 11.5px; color: #999; }

@@ -6,6 +6,8 @@
 window.API = (() => {
   let sessionToken = null;
   let coupleId = null;
+  let userId = null;
+  let userName = null;
 
   function base() {
     return window.CONFIG.FUNCTIONS_BASE_URL.replace(/\/$/, "");
@@ -24,6 +26,8 @@ window.API = (() => {
     const data = await res.json();
     sessionToken = data.session_token;
     coupleId = data.couple_id;
+    userId = data.user?.id ?? null;
+    userName = data.user?.first_name ?? null;
     return data;
   }
 
@@ -46,6 +50,8 @@ window.API = (() => {
   return {
     authenticate,
     isPaired: () => !!coupleId,
+    myId: () => userId,
+    myName: () => userName,
 
     getDiary: (date) =>
       authedFetch(`/diary${date ? `?date=${date}` : ""}`),
@@ -79,5 +85,38 @@ window.API = (() => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       }),
+
+    // ---- reminders ----
+    getReminders: () => authedFetch(`/reminders`),
+    addReminder: (note, remind_date, target) =>
+      authedFetch(`/reminders`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ note, remind_date, target }),
+      }),
+    deleteReminder: (id) =>
+      authedFetch(`/reminders?id=${encodeURIComponent(id)}`, { method: "DELETE" }),
+
+    // ---- promises ----
+    getPromises: () => authedFetch(`/promises`),
+    addPromise: (note, promise_date, direction) =>
+      authedFetch(`/promises`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ note, promise_date, direction }),
+      }),
+    togglePromise: (id, fulfilled) =>
+      authedFetch(`/promises`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, fulfilled }),
+      }),
+    deletePromise: (id) =>
+      authedFetch(`/promises?id=${encodeURIComponent(id)}`, { method: "DELETE" }),
+
+    // ---- playlist ----
+    getTracks: () => authedFetch(`/tracks`),
+    deleteTrack: (id) =>
+      authedFetch(`/tracks?id=${encodeURIComponent(id)}`, { method: "DELETE" }),
   };
 })();
